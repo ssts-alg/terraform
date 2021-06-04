@@ -5,21 +5,27 @@ resource "aws_vpc" "abc" {
   }
 }
 
-
-resource "aws_subnet" "xyz" {
+resource "aws_subnet" "public" {
+  count      = length(var.public_subnet_cidrs)
   vpc_id     = aws_vpc.abc.id
-  cidr_block = var.subnet_cidrs[0]
+  cidr_block = var.public_subnet_cidrs[count.index]
 
   tags = {
-    Name = var.subnet_names[0]
+    Name = "PublicSubnet-${count.index + 1}"
   }
 }
 
-resource "aws_subnet" "xyz1" {
+
+
+
+resource "aws_subnet" "private" {
+  count      = length(var.private_subnet_cidrs)
   vpc_id     = aws_vpc.abc.id
-  cidr_block = var.subnet_cidrs[1]
+  cidr_block = var.private_subnet_cidrs[count.index]
 
   tags = {
-    Name = var.subnet_names[1]
+    Name = "PrivateSubnet-${count.index + 1}"
+
+
   }
 }
